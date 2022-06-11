@@ -249,7 +249,11 @@ static ssize_t prl_tg_write(struct file *filp, const char __user *buf,
 	size_t nbytes, loff_t *ppos)
 {
 	int ret = 0;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,17,0)
 	struct tg_dev *dev = pde_data(FILE_DENTRY(filp)->d_inode);
+#else
+	struct tg_dev *dev = PDE_DATA(FILE_DENTRY(filp)->d_inode);
+#endif
 	void *ureq = NULL;
 	TG_REQ_DESC sdesc;
 	TG_REQUEST src;
