@@ -1,5 +1,9 @@
 # prl_tools
-Parallels Tools for newer kernels
+Parallels Tools for newer kernels.
+
+I use Fedora 36 on arm64 so this repo is updated when a kernel update breaks Parallels Tools and when I have the time to do so.
+
+Last tested kernel version: `5.18.5-200`. PRs welcome for other kernels.
 
 # Installation
 - Clone
