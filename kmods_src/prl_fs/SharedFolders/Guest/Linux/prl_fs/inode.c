@@ -16,6 +16,7 @@
 #include <linux/pagemap.h>
 #include <linux/namei.h>
 #include <linux/cred.h>
+#include <linux/writeback.h>
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 40)) && \
     (LINUX_VERSION_CODE < KERNEL_VERSION(3, 0, 0))
@@ -55,8 +56,9 @@ unsigned long *prlfs_dfl( struct dentry *de)
 {
 	return (unsigned long *)&(de->d_fsdata);
 }
-
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 9, 0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
+#define prl_uaccess_kernel() false
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(5, 9, 0)
 #define prl_uaccess_kernel() uaccess_kernel()
 #else
 #define prl_uaccess_kernel() segment_eq(get_fs(), KERNEL_DS)
@@ -954,7 +956,11 @@ static const struct address_space_operations prlfs_aops = {
 	.writepage		= prlfs_writepage,
 	.write_begin    = simple_write_begin,
 	.write_end      = prlfs_write_end,
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 18, 0)
+	.dirty_folio	= filemap_dirty_folio,
+	#else
 	.set_page_dirty = __set_page_dirty_nobuffers,
+	#endif
 };
 
 

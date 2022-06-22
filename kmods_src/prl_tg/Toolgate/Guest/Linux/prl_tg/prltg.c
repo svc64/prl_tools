@@ -382,7 +382,7 @@ static int prl_tg_initialize(struct tg_dev *dev)
 	}
 #endif
 	/* Set DMA ability. Only lower 4G is possible to address */
-	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
+	rc = prl_dma_set_mask(pdev, DMA_BIT_MASK(64));
 	if (rc) {
 		printk(KERN_ERR "no usable DMA configuration\n");
 		goto err_out;

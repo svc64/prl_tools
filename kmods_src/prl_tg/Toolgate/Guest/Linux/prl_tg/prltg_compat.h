@@ -117,4 +117,14 @@
 #define prl_in_compat_syscall() test_thread_flag(TIF_IA32)
 #endif
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 18, 0)
+#define prl_dma_set_mask(__dev, __mask) dma_set_mask(&((__dev)->dev), (__mask))
+#define prl_dma_map_page(__dev, __page, __offset, __size, __direction) dma_map_page(&((__dev)->dev), (__page), (__offset), (__size), (__direction))
+#define prl_dma_unmap_page(__dev, __dma_addr, __size, __direction) dma_unmap_page(&((__dev)->dev), (__dma_addr), (__size), (__direction))
+#else
+#define prl_dma_set_mask(__dev, __mask) pci_set_dma_mask(&((__dev)->dev), (__mask))
+#define prl_dma_map_page(__dev, __page, __offset, __size, __direction) pci_map_page(&((__dev)->dev), (__page), (__offset), (__size), (__direction))
+#define prl_dma_unmap_page(__dev, __dma_addr, __size, __direction) pci_unmap_page(&((__dev)->dev), (__dma_addr), (__size), (__direction))
+#endif
+
 #endif /* __PRL_TG_COMPAT_H__ */
